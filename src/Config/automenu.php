@@ -9,7 +9,14 @@ return[
         "navbar_brand" => "",
         "brand_img" => "",
         "navbar_collapse" => "",
-        "navbar_nav_izquierdo" => "",
+        "navbar_nav_izquierdo" => "pl-2",
+        "navbar_nav_derecho" => "pr-2 text-right justify-content-end",
+        "button_izquierdo" => "",
+        "button_derecho" => "",
+    ],
+    'icons' => [
+        'left' => "fa fa-bars",
+        'right' => "fa fa-user",
     ],
     "replaces"=>[
         "{name}"=>"name",

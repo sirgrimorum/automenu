@@ -48,6 +48,7 @@ return [
     'brand_text' => "SirGrimorum",
     'brand_img' => "__asset__img/logonaranja.png",
     'brand_url' => "__url__/",
+    'brand_center' => false,
     'izquierdo' => [
         "Menu Item" => [
             "logedin" => true,

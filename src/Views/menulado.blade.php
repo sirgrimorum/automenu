@@ -1,4 +1,10 @@
 <?php
+$classItem = "nav-item";
+$typeItem = "li";
+if(array_get($config,"menu.brand_center")){
+    $classItem = "dropdown-item";
+    $typeItem = "span";
+}
 foreach ($menuItems as $nombre => $datos) {
     $nombre = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($nombre, $config);
     if (is_array($datos)) {
@@ -6,7 +12,7 @@ foreach ($menuItems as $nombre => $datos) {
             if (Sirgrimorum\AutoMenu\AutoMenu::hasAccess($datos['logedin'])) {
                 if (is_array($datos['items'])) {
                     ?>
-                    <li class="nav-item dropdown">
+                    <{{$typeItem}} class="{{$classItem}} dropdown">
                         <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {{ $nombre }}
                         </a>
@@ -64,11 +70,11 @@ foreach ($menuItems as $nombre => $datos) {
                             }
                             ?>
                         </div>
-                    </li>
+                    </{{$typeItem}}>
                     <?php
                 } elseif ($datos['items'] == '_') {
                     ?>
-                    <li class="nav-item divider"></li>
+                    <{{$typeItem}} class="{{$classItem}} divider"></{{$typeItem}}>
                     <?php
                 } elseif ($nombre == 'text') {
                     ?>
@@ -82,18 +88,18 @@ foreach ($menuItems as $nombre => $datos) {
                     <?php
                 } else {
                     ?>
-                    <li class="nav-item">
+                    <{{$typeItem}} class="{{$classItem}}">
                         <a class="nav-link" href="{{ $datos['items'] }}">
                             {{ $nombre }}
                         </a>
-                    </li>
+                    </{{$typeItem}}>
                     <?php
                 }
             }
         }
     } elseif ($nombre == '_') {
         ?>
-        <li class="nav-item divider"></li>
+        <{{$typeItem}} class="{{$classItem}} divider"></{{$typeItem}}>
         <?php
     } elseif ($nombre == 'text') {
         ?>
@@ -103,11 +109,11 @@ foreach ($menuItems as $nombre => $datos) {
         <?php
     } else {
         ?>
-        <li class="nav-item">
+        <{{$typeItem}} class="{{$classItem}}">
             <a class="nav-link" href="{{ $datos }}">
                 {{$nombre}}
             </a>
-        </li>
+        </{{$typeItem}}>
         <?php
     }
 }

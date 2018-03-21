@@ -38,10 +38,12 @@ class AutoMenu {
             $config = config('sirgrimorum.automenu');
         }
         foreach ($config['replaces'] as $str => $campo) {
-            if (is_callable(\Auth::user()->$campo)) {
-                $string = str_replace($str, \Auth::user()->$campo(), $string);
-            } else {
-                $string = str_replace($str, \Auth::user()->$campo, $string);
+            if (\Auth::check()) {
+                if (is_callable(\Auth::user()->$campo)) {
+                    $string = str_replace($str, \Auth::user()->$campo(), $string);
+                } else {
+                    $string = str_replace($str, \Auth::user()->$campo, $string);
+                }
             }
         }
         return $string;
@@ -63,9 +65,9 @@ class AutoMenu {
         } else {
             $mostrar = false;
         }
-        if ($mostrar){
+        if ($mostrar) {
             //echo "Res=si";
-        }else{
+        } else {
             //echo "Res=no";
         }
         return $mostrar;

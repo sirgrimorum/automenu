@@ -1,10 +1,14 @@
 <?php
 $classItem = "nav-item";
 $classText = "navbar-text";
+$classDivider = $classItem  . " divider";
+$typeDivider = "li";
 $typeItem = "li";
 if(array_get($config,"menu.brand_center")){
     $classItem = "dropdown-item";
     $classText = "dropdown-item disabled";
+    $classDivider = "dropdown-divider";
+    $typeDivider = "div";
     $typeItem = "span";
 }
 foreach ($menuItems as $nombre => $datos) {
@@ -78,7 +82,7 @@ foreach ($menuItems as $nombre => $datos) {
                     <?php
                 } elseif ($datos['items'] == '_') {
                     ?>
-                    <{{$typeItem}} class="{{$classItem}} divider"></{{$typeItem}}>
+                    <{{$typeDivider}} class="{{$classDivider}}"></{{$typeDivider}}>
                     <?php
                 } elseif ($nombre == 'text') {
                     $datos['items'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos['items'], $config);
@@ -104,7 +108,7 @@ foreach ($menuItems as $nombre => $datos) {
         }
     } elseif ($nombre == '_') {
         ?>
-        <{{$typeItem}} class="{{$classItem}} divider"></{{$typeItem}}>
+        <{{$typeDivider}} class="{{$classDivider}}"></{{$typeDivider}}>
         <?php
     } elseif ($nombre == 'text') {
         $datos = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos, $config);

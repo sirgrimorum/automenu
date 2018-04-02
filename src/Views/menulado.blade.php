@@ -34,6 +34,7 @@ foreach ($menuItems as $nombre => $datos) {
                                                 <a class="dropdown-item" href="{{print_r($datos2['item']) }}">{{ $nombre2 }}</a>
                                                 <?php
                                             } elseif ($nombre2 == 'text') {
+                                                $datos2['item'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos2['item'], $config);
                                                 ?>
                                                 <span class="dropdown-item">
                                                     {{ $datos2['item'] }}
@@ -55,6 +56,7 @@ foreach ($menuItems as $nombre => $datos) {
                                     <div class="dropdown-divider"></div>
                                     <?php
                                 } elseif ($nombre2 == 'text') {
+                                    $datos2 = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos2, $config);
                                     ?>
                                     <span class="dropdown-item">
                                         {{ $datos2 }}
@@ -79,6 +81,7 @@ foreach ($menuItems as $nombre => $datos) {
                     <{{$typeItem}} class="{{$classItem}} divider"></{{$typeItem}}>
                     <?php
                 } elseif ($nombre == 'text') {
+                    $datos['items'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos['items'], $config);
                     ?>
                     <span class="{{$classText}}">
                         {{ $datos['items'] }}
@@ -104,6 +107,7 @@ foreach ($menuItems as $nombre => $datos) {
         <{{$typeItem}} class="{{$classItem}} divider"></{{$typeItem}}>
         <?php
     } elseif ($nombre == 'text') {
+        $datos = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos, $config);
         ?>
         <span class="{{$classText}}">
             {{ $datos }}

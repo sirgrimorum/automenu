@@ -1,8 +1,10 @@
 <?php
 $classItem = "nav-item";
+$classText = "navbar-text";
 $typeItem = "li";
 if(array_get($config,"menu.brand_center")){
     $classItem = "dropdown-item";
+    $classText = "dropdown-item disabled";
     $typeItem = "span";
 }
 foreach ($menuItems as $nombre => $datos) {
@@ -78,7 +80,7 @@ foreach ($menuItems as $nombre => $datos) {
                     <?php
                 } elseif ($nombre == 'text') {
                     ?>
-                    <span class="navbar-text">
+                    <span class="{{$classText}}">
                         {{ $datos['items'] }}
                     </span>
                     <?php
@@ -103,7 +105,7 @@ foreach ($menuItems as $nombre => $datos) {
         <?php
     } elseif ($nombre == 'text') {
         ?>
-        <span class="navbar-text">
+        <span class="{{$classText}}">
             {{ $datos }}
         </span>
         <?php

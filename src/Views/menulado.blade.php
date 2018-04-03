@@ -20,7 +20,7 @@ foreach ($menuItems as $nombre => $datos) {
                     ?>
                     <{{$typeItem}} class="{{$classItem}} dropdown">
                         <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            {{ $nombre }}
+                            {!! $nombre !!}
                         </a>
                         <div class="dropdown-menu">
                             <?php
@@ -35,13 +35,13 @@ foreach ($menuItems as $nombre => $datos) {
                                                 <?php
                                             } elseif (is_array($datos2['item'])) {
                                                 ?>
-                                                <a class="dropdown-item" href="{{print_r($datos2['item']) }}">{{ $nombre2 }}</a>
+                                                <a class="dropdown-item" href="{{print_r($datos2['item']) }}">{!! $nombre2 !!}</a>
                                                 <?php
                                             } elseif ($nombre2 == 'text') {
                                                 $datos2['item'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos2['item'], $config);
                                                 ?>
                                                 <span class="dropdown-item">
-                                                    {{ $datos2['item'] }}
+                                                    {!! $datos2['item'] !!}
                                                 </span>
                                                 <?php
                                             } elseif (stripos($datos2['item'], "blade:") !== false) {
@@ -50,7 +50,7 @@ foreach ($menuItems as $nombre => $datos) {
                                                 <?php
                                             } else {
                                                 ?>
-                                                <a class="dropdown-item" href="{{$datos2['item'] }}">{{ $nombre2 }}</a>
+                                                <a class="dropdown-item" href="{{$datos2['item'] }}">{!! $nombre2 !!}</a>
                                                 <?php
                                             }
                                         }
@@ -63,7 +63,7 @@ foreach ($menuItems as $nombre => $datos) {
                                     $datos2 = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos2, $config);
                                     ?>
                                     <span class="dropdown-item">
-                                        {{ $datos2 }}
+                                        {!! $datos2 !!}
                                     </span>
                                     <?php
                                 } elseif (stripos($datos2, "blade:") !== false) {
@@ -72,7 +72,7 @@ foreach ($menuItems as $nombre => $datos) {
                                     <?php
                                 } else {
                                     ?>
-                                    <a class="dropdown-item" href="{{ $datos2 }}">{{ $nombre2 }}</a>
+                                    <a class="dropdown-item" href="{{ $datos2 }}">{!! $nombre2 !!}</a>
                                     <?php
                                 }
                             }
@@ -88,7 +88,7 @@ foreach ($menuItems as $nombre => $datos) {
                     $datos['items'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos['items'], $config);
                     ?>
                     <span class="{{$classText}}">
-                        {{ $datos['items'] }}
+                        {!! $datos['items'] !!}
                     </span>
                     <?php
                 } elseif (stripos($datos['items'], "blade:") !== false) {
@@ -99,7 +99,7 @@ foreach ($menuItems as $nombre => $datos) {
                     ?>
                     <{{$typeItem}} class="{{$classItem}}">
                         <a class="nav-link" href="{{ $datos['items'] }}">
-                            {{ $nombre }}
+                            {!! $nombre !!}
                         </a>
                     </{{$typeItem}}>
                     <?php
@@ -114,14 +114,14 @@ foreach ($menuItems as $nombre => $datos) {
         $datos = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos, $config);
         ?>
         <span class="{{$classText}}">
-            {{ $datos }}
+            {!! $datos !!}
         </span>
         <?php
     } else {
         ?>
         <{{$typeItem}} class="{{$classItem}}">
             <a class="nav-link" href="{{ $datos }}">
-                {{$nombre}}
+                {!!$nombre!!}
             </a>
         </{{$typeItem}}>
         <?php

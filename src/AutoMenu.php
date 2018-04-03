@@ -84,6 +84,8 @@ class AutoMenu {
         foreach ($array as $key => $item) {
             $key = str_replace(config("sirgrimorum.automenu.locale_key"), \App::getLocale(), $key);
             $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.trans_prefix"), "trans");
+            $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.asset_prefix"), "asset");
+            $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.public_prefix"), "public_path");
             if (gettype($item) != "Closure Object") {
                 if (is_array($item)) {
                     $result[$key] = AutoMenu::translateConfig($item);

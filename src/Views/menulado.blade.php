@@ -35,7 +35,9 @@ foreach ($menuItems as $nombre => $datos) {
                                                 <?php
                                             } elseif (is_array($datos2['item'])) {
                                                 ?>
-                                                <a class="dropdown-item" href="{{print_r($datos2['item']) }}">{!! $nombre2 !!}</a>
+                                                 <{{$typeItem}} class="{{$classItem}}">
+                                                <a class="nav-link" href="{{print_r($datos2['item']) }}">{!! $nombre2 !!}</a>
+                                                </{{$typeItem}}>
                                                 <?php
                                             } elseif ($nombre2 == 'text') {
                                                 $datos2['item'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos2['item'], $config);
@@ -50,7 +52,9 @@ foreach ($menuItems as $nombre => $datos) {
                                                 <?php
                                             } else {
                                                 ?>
-                                                <a class="dropdown-item" href="{{$datos2['item'] }}">{!! $nombre2 !!}</a>
+                                                <{{$typeItem}} class="{{$classItem}}">
+                                                <a class="nav-link" href="{{$datos2['item'] }}">{!! $nombre2 !!}</a>
+                                                </{{$typeItem}}>
                                                 <?php
                                             }
                                         }
@@ -72,7 +76,9 @@ foreach ($menuItems as $nombre => $datos) {
                                     <?php
                                 } else {
                                     ?>
-                                    <a class="dropdown-item" href="{{ $datos2 }}">{!! $nombre2 !!}</a>
+                                     <{{$typeItem}} class="{{$classItem}}">
+                                    <a class="nav-link" href="{{ $datos2 }}">{!! $nombre2 !!}</a>
+                                    </{{$typeItem}}>
                                     <?php
                                 }
                             }

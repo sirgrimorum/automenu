@@ -37,7 +37,7 @@ class AutoMenuServiceProvider extends ServiceProvider
                 $id = $auxExpression[0];
                 $config = $auxExpression[1];
                 $automenu = "";
-            } elseif (count($auxExpression)>1) {
+            } elseif (count($auxExpression)>0) {
                 $id = $auxExpression[0];
                 $config = "";
                 $automenu = "";

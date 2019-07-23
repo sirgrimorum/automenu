@@ -8,6 +8,13 @@ class AutoMenu {
         
     }
 
+    /**
+     * Construye el html del menú
+     * @param String $id Id para el container del menu
+     * @param String/Array $config El nombre del archivo de configuración o el array de configuración con los datos del menú
+     * @param String/Array $automenu El nombre del archivo localizado o el array de la estructura del menu
+     * @return String Html con el menu
+     */
     public static function buildAutoMenu($id = "menu", $config = "", $automenu = "") {
         if (!is_array($config)) {
             if ($config == "") {
@@ -21,7 +28,7 @@ class AutoMenu {
             if ($automenu == "") {
                 $automenu = 'automenu::automenu';
             }
-            $automenu = trans('automenu::automenu');
+            $automenu = trans($automenu);
         }
         $automenu = AutoMenu::translateConfig($automenu);
         $config['menu'] = $automenu;

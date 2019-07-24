@@ -11,6 +11,8 @@ return[
         "navbar_collapse" => "",
         "navbar_nav_izquierdo" => "pl-2",
         "navbar_nav_derecho" => "pr-2 text-right justify-content-end",
+        "item_izquierdo" => "",
+        "item_derecho" => "",
         "button_izquierdo" => "",
         "button_derecho" => "",
     ],

@@ -1,11 +1,11 @@
 <?php
-$classItem = "nav-item";
+$classItem = "nav-item " . $class_extra_item;
 $classText = "navbar-text";
 $classDivider = $classItem  . " divider";
 $typeDivider = "li";
 $typeItem = "li";
 if(array_get($config,"menu.brand_center")){
-    $classItem = "dropdown-item";
+    $classItem = "dropdown-item " . $class_extra_item;
     $classText = "dropdown-item disabled";
     $classDivider = "dropdown-divider";
     $typeDivider = "div";

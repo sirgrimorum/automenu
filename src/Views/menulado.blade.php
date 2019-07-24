@@ -1,5 +1,5 @@
 <?php
-$classItem = "nav-item " . $class_extra_item;
+$classItem = "nav-item";
 $classText = "navbar-text";
 $classDivider = $classItem  . " divider";
 $typeDivider = "li";
@@ -17,8 +17,10 @@ foreach ($menuItems as $nombre => $datos) {
         if (isset($datos['logedin']) && isset($datos['items'])) {
             if (Sirgrimorum\AutoMenu\AutoMenu::hasAccess($datos['logedin'])) {
                 if (is_array($datos['items'])) {
+                    $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
+                    $class_extra_item_primero = "";
                     ?>
-                    <{{$typeItem}} class="{{$classItem}} dropdown">
+                    <{{$typeItem}} class="{{$classItem . $classExtra}} dropdown">
                         <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             {!! $nombre !!}
                         </a>
@@ -35,7 +37,7 @@ foreach ($menuItems as $nombre => $datos) {
                                                 <?php
                                             } elseif (is_array($datos2['item'])) {
                                                 ?>
-                                                 <{{$typeItem}} class="{{$classItem}}">
+                                                 <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno}}">
                                                 <a class="nav-link" href="{{print_r($datos2['item']) }}">{!! $nombre2 !!}</a>
                                                 </{{$typeItem}}>
                                                 <?php
@@ -52,7 +54,7 @@ foreach ($menuItems as $nombre => $datos) {
                                                 <?php
                                             } else {
                                                 ?>
-                                                <{{$typeItem}} class="{{$classItem}}">
+                                                <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno}}">
                                                 <a class="nav-link" href="{{$datos2['item'] }}">{!! $nombre2 !!}</a>
                                                 </{{$typeItem}}>
                                                 <?php
@@ -66,7 +68,7 @@ foreach ($menuItems as $nombre => $datos) {
                                 } elseif ($nombre2 == 'text') {
                                     $datos2 = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos2, $config);
                                     ?>
-                                    <span class="dropdown-item">
+                                    <span class="dropdown-item {{$class_extra_item_interno}}">
                                         {!! $datos2 !!}
                                     </span>
                                     <?php
@@ -76,7 +78,7 @@ foreach ($menuItems as $nombre => $datos) {
                                     <?php
                                 } else {
                                     ?>
-                                     <{{$typeItem}} class="{{$classItem}}">
+                                     <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno}}">
                                     <a class="nav-link" href="{{ $datos2 }}">{!! $nombre2 !!}</a>
                                     </{{$typeItem}}>
                                     <?php
@@ -92,8 +94,10 @@ foreach ($menuItems as $nombre => $datos) {
                     <?php
                 } elseif ($nombre == 'text') {
                     $datos['items'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos['items'], $config);
+                    $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
+                    $class_extra_item_primero = "";
                     ?>
-                    <span class="{{$classText}}">
+                    <span class="{{$classText . $classExtra}}">
                         {!! $datos['items'] !!}
                     </span>
                     <?php
@@ -102,8 +106,10 @@ foreach ($menuItems as $nombre => $datos) {
                     @include(str_replace("blade:","",$datos['items']))
                     <?php
                 } else {
+                    $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
+                    $class_extra_item_primero = "";
                     ?>
-                    <{{$typeItem}} class="{{$classItem}}">
+                    <{{$typeItem}} class="{{$classItem . $classExtra}}">
                         <a class="nav-link" href="{{ $datos['items'] }}">
                             {!! $nombre !!}
                         </a>
@@ -117,15 +123,19 @@ foreach ($menuItems as $nombre => $datos) {
         <{{$typeDivider}} class="{{$classDivider}}"></{{$typeDivider}}>
         <?php
     } elseif ($nombre == 'text') {
+        $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
+        $class_extra_item_primero = "";
         $datos = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos, $config);
         ?>
-        <span class="{{$classText}}">
+        <span class="{{$classText . $classExtra}}">
             {!! $datos !!}
         </span>
         <?php
     } else {
+        $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
+        $class_extra_item_primero = "";
         ?>
-        <{{$typeItem}} class="{{$classItem}}">
+        <{{$typeItem}} class="{{$classItem . $classExtra}}">
             <a class="nav-link" href="{{ $datos }}">
                 {!!$nombre!!}
             </a>

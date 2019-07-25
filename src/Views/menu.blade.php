@@ -16,7 +16,7 @@
     </button>
     <div class="collapse navbar-collapse {{array_get($config,"classes.navbar_collapse")}}" id="navbar{{ucfirst($config['id'])}}">
         @if($config["menu"]["izquierdo"]!="")
-        <ul class="navbar-nav mr-auto {{array_get($config,"classes.navbar_nav_izquierdo")}}">
+        <ul class="navbar-nav {{array_get($config,"classes.navbar_nav_izquierdo")}}">
             @include("automenu::menulado",["menuItems"=>$config["menu"]["izquierdo"],"config"=>$config,"class_extra_item"=>array_get($config,"classes.item_izquierdo"),"class_extra_item_primero"=>array_get($config,"classes.item_izquierdo_primero"),"class_extra_item_interno"=>array_get($config,"classes.item_izquierdo_interno")])
             @if($config["menuitem_izquierda_stack"]!="")
             @stack($config["menuitem_izquierda_stack"])
@@ -24,7 +24,7 @@
         </ul>
         @endif
         @if($config["menu"]["derecho"]!="")
-        <ul class="navbar-nav ml-auto {{array_get($config,"classes.navbar_nav_derecho")}}">
+        <ul class="navbar-nav {{array_get($config,"classes.navbar_nav_derecho")}}">
             @include("automenu::menulado",["menuItems"=>array_get($config, "menu.derecho"),"config"=>$config,"class_extra_item"=>array_get($config,"classes.item_derecho"),"class_extra_item_primero"=>array_get($config,"classes.item_derecho_primero"),"class_extra_item_interno"=>array_get($config,"classes.item_derecho_interno")])
             @if($config["menuitem_derecha_stack"]!="")
             @stack($config["menuitem_derecha_stack"])
@@ -39,7 +39,7 @@
             <i class="fa {{array_get($config,"icons.left",'fa-bars')}}"></i>
         </button>
         <div class="dropdown-menu {{array_get($config,"classes.navbar_collapse")}}" id="navbar{{ucfirst($config['id'])}}_i" aria-labelledby="navbar{{ucfirst($config['id'])}}_i_l">
-            <div class="mr-auto {{array_get($config,"classes.navbar_nav_izquierdo")}}" >
+            <div class="{{array_get($config,"classes.navbar_nav_izquierdo")}}" >
                 @include("automenu::menulado",["menuItems"=>$config["menu"]["izquierdo"],"config"=>$config,"class_extra_item"=>array_get($config,"classes.item_izquierdo"),"class_extra_item_primero"=>array_get($config,"classes.item_izquierdo_primero"),"class_extra_item_interno"=>array_get($config,"classes.item_izquierdo_interno")])
                 @if($config["menuitem_izquierda_stack"]!="")
                 @stack($config["menuitem_izquierda_stack"])
@@ -62,7 +62,7 @@
             <i class="fa {{array_get($config,"icons.right",'fa-bars')}}"></i>
         </button>
         <div class="dropdown-menu {{array_get($config,"classes.navbar_collapse")}}" style="right: 0px;left: auto;" id="navbar{{ucfirst($config['id'])}}_d" aria-labelledby="navbar{{ucfirst($config['id'])}}_d_l">
-            <div class="ml-auto {{array_get($config,"classes.navbar_nav_derecho")}}">
+            <div class="{{array_get($config,"classes.navbar_nav_derecho")}}">
                 @include("automenu::menulado",["menuItems"=>array_get($config, "menu.derecho"),"config"=>$config,"class_extra_item"=>array_get($config,"classes.item_derecho"),"class_extra_item_primero"=>array_get($config,"classes.item_derecho_primero"),"class_extra_item_interno"=>array_get($config,"classes.item_derecho_interno")])
                 @if($config["menuitem_derecha_stack"]!="")
                 @stack($config["menuitem_derecha_stack"])

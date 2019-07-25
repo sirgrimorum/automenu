@@ -4,6 +4,12 @@ $classText = "navbar-text";
 $classDivider = $classItem  . " divider";
 $typeDivider = "li";
 $typeItem = "li";
+
+$classItem2 = "dropdown-item";
+$classText2 = "dropdown-item disabled";
+$classDivider2 = "dropdown-divider";
+$typeDivider2 = "a";
+$typeItem2 = "a";
 if(array_get($config,"menu.brand_center")){
     $classItem = "dropdown-item " . $class_extra_item;
     $classText = "dropdown-item disabled";
@@ -42,9 +48,9 @@ foreach ($menuItems as $nombre => $datos) {
                                                     $active = "";
                                                 }
                                                 ?>
-                                                 <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno . $active}}">
+                                                 <{{$typeItem2}} class="{{$classItem2 . " " . $class_extra_item_interno . $active}}">
                                                 <a class="nav-link" href="{{print_r($datos2['item']) }}">{!! $nombre2 !!}</a>
-                                                </{{$typeItem}}>
+                                                </{{$typeItem2}}>
                                                 <?php
                                             } elseif ($nombre2 == 'text') {
                                                 $datos2['item'] = Sirgrimorum\AutoMenu\AutoMenu::replaceUser($datos2['item'], $config);
@@ -64,9 +70,9 @@ foreach ($menuItems as $nombre => $datos) {
                                                     $active = "";
                                                 }
                                                 ?>
-                                                <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno . $active}}">
+                                                <{{$typeItem2}} class="{{$classItem2 . " " . $class_extra_item_interno . $active}}">
                                                 <a class="nav-link" href="{{$datos2['item'] }}">{!! $nombre2 !!}</a>
-                                                </{{$typeItem}}>
+                                                </{{$typeItem2}}>
                                                 <?php
                                             }
                                         }
@@ -93,9 +99,9 @@ foreach ($menuItems as $nombre => $datos) {
                                         $active = "";
                                     }
                                     ?>
-                                     <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno . $active}}">
+                                     <{{$typeItem2}} class="{{$classItem2 . " " . $class_extra_item_interno . $active}}">
                                     <a class="nav-link" href="{{ $datos2 }}">{!! $nombre2 !!}</a>
-                                    </{{$typeItem}}>
+                                    </{{$typeItem2}}>
                                     <?php
                                 }
                             }
@@ -131,7 +137,7 @@ foreach ($menuItems as $nombre => $datos) {
                     ?>
                     <{{$typeItem}} class="{{$classItem . $classExtra . $active}}">
                         <a class="nav-link" href="{{ $datos['items'] }}">
-                            {!! $nombre !!}
+                            {!! $nombre!!}
                         </a>
                     </{{$typeItem}}>
                     <?php

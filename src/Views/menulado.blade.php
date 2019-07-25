@@ -36,8 +36,13 @@ foreach ($menuItems as $nombre => $datos) {
                                                 @include(str_replace("blade:","",$datos2['item']))
                                                 <?php
                                             } elseif (is_array($datos2['item'])) {
+                                                if ($request->is(serialize($datos2['item']))) {
+                                                    $active = " active";
+                                                }else{
+                                                    $active = "";
+                                                }
                                                 ?>
-                                                 <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno}}">
+                                                 <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno . $active}}">
                                                 <a class="nav-link" href="{{print_r($datos2['item']) }}">{!! $nombre2 !!}</a>
                                                 </{{$typeItem}}>
                                                 <?php
@@ -53,8 +58,13 @@ foreach ($menuItems as $nombre => $datos) {
                                                 @include(str_replace("blade:","",$datos2['item']))
                                                 <?php
                                             } else {
+                                                if ($request->is($datos2['item'])) {
+                                                    $active = " active";
+                                                }else{
+                                                    $active = "";
+                                                }
                                                 ?>
-                                                <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno}}">
+                                                <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno . $active}}">
                                                 <a class="nav-link" href="{{$datos2['item'] }}">{!! $nombre2 !!}</a>
                                                 </{{$typeItem}}>
                                                 <?php
@@ -77,8 +87,13 @@ foreach ($menuItems as $nombre => $datos) {
                                     @include(str_replace("blade:","",$datos2))
                                     <?php
                                 } else {
+                                    if ($request->is($datos2)) {
+                                        $active = " active";
+                                    }else{
+                                        $active = "";
+                                    }
                                     ?>
-                                     <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno}}">
+                                     <{{$typeItem}} class="{{$classItem . " " . $class_extra_item_interno . $active}}">
                                     <a class="nav-link" href="{{ $datos2 }}">{!! $nombre2 !!}</a>
                                     </{{$typeItem}}>
                                     <?php
@@ -108,8 +123,13 @@ foreach ($menuItems as $nombre => $datos) {
                 } else {
                     $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
                     $class_extra_item_primero = "";
+                    if ($request->is($datos['items'])) {
+                        $active = " active";
+                    }else{
+                        $active = "";
+                    }
                     ?>
-                    <{{$typeItem}} class="{{$classItem . $classExtra}}">
+                    <{{$typeItem}} class="{{$classItem . $classExtra . $active}}">
                         <a class="nav-link" href="{{ $datos['items'] }}">
                             {!! $nombre !!}
                         </a>
@@ -134,8 +154,13 @@ foreach ($menuItems as $nombre => $datos) {
     } else {
         $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
         $class_extra_item_primero = "";
+        if ($request->is($datos)) {
+            $active = " active";
+        }else{
+            $active = "";
+        }
         ?>
-        <{{$typeItem}} class="{{$classItem . $classExtra}}">
+        <{{$typeItem}} class="{{$classItem . $classExtra . $active}}">
             <a class="nav-link" href="{{ $datos }}">
                 {!!$nombre!!}
             </a>

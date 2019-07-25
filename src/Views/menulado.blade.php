@@ -36,7 +36,7 @@ foreach ($menuItems as $nombre => $datos) {
                                                 @include(str_replace("blade:","",$datos2['item']))
                                                 <?php
                                             } elseif (is_array($datos2['item'])) {
-                                                if ($request->is(serialize($datos2['item']))) {
+                                                if (serialize($datos2['item']) == app('request')->fullUrl()) {
                                                     $active = " active";
                                                 }else{
                                                     $active = "";
@@ -58,7 +58,7 @@ foreach ($menuItems as $nombre => $datos) {
                                                 @include(str_replace("blade:","",$datos2['item']))
                                                 <?php
                                             } else {
-                                                if ($request->is($datos2['item'])) {
+                                                if ($datos2['item'] == app('request')->fullUrl()) {
                                                     $active = " active";
                                                 }else{
                                                     $active = "";
@@ -87,7 +87,7 @@ foreach ($menuItems as $nombre => $datos) {
                                     @include(str_replace("blade:","",$datos2))
                                     <?php
                                 } else {
-                                    if ($request->is($datos2)) {
+                                    if ($datos2 == app('request')->fullUrl()) {
                                         $active = " active";
                                     }else{
                                         $active = "";
@@ -123,7 +123,7 @@ foreach ($menuItems as $nombre => $datos) {
                 } else {
                     $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
                     $class_extra_item_primero = "";
-                    if ($request->is($datos['items'])) {
+                    if ($datos['items'] == app('request')->fullUrl()) {
                         $active = " active";
                     }else{
                         $active = "";
@@ -154,7 +154,7 @@ foreach ($menuItems as $nombre => $datos) {
     } else {
         $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
         $class_extra_item_primero = "";
-        if ($request->is($datos)) {
+        if ($datos == app('request')->fullUrl()) {
             $active = " active";
         }else{
             $active = "";

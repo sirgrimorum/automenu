@@ -48,6 +48,8 @@ class AutoMenu {
             if (\Auth::check()) {
                 if (is_callable(\Auth::user()->$campo)) {
                     $string = str_replace($str, \Auth::user()->$campo(), $string);
+                } elseif (method_exists(\Auth::user(),"get")) {
+                    $string = str_replace($str, \Auth::user()->get($campo), $string);
                 } else {
                     $string = str_replace($str, \Auth::user()->$campo, $string);
                 }

@@ -5,7 +5,7 @@ return[
     "menuitem_izquierda_stack" => "menuobjizq",
     "menuitem_derecha_stack" => "menuobjder",
     "classes" => [
-        "navbar_extra" => "navbar-dark bg-dark navbar-fixed-top",
+        "navbar_extra" => "navbar-dark bg-dark sticky-top",
         "navbar_brand" => "",
         "brand_img" => "",
         "navbar_collapse" => "",

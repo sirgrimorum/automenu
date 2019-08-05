@@ -15,7 +15,7 @@ Via Composer
 ``` bash
 $ composer require sirgrimorum/automenu
 ```
- Then publish de configuration files for the auto generated menus
+ Then publish de configuration files for the auto generated menus:
 
 First the configuration file (general configuration for a menu)
 ``` bash

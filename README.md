@@ -7,22 +7,7 @@
 [![Quality Score][ico-code-quality]][link-code-quality]
 [![Total Downloads][ico-downloads]][link-downloads]
 
-This is where your description should go. Try and limit it to a paragraph or two, and maybe throw in a mention of what
-PSRs you support to avoid any confusion with users and contributors.
-
-## Structure
-
-If any of the following are applicable to your project, then the directory structure should follow industry best practices by being named the following.
-
-```
-bin/        
-config/
-src/
-tests/
-vendor/
-```
-
-
+Easy Menu builder for Laravel using Bootstrap framework.
 ## Install
 
 Via Composer
@@ -30,23 +15,45 @@ Via Composer
 ``` bash
 $ composer require sirgrimorum/automenu
 ```
+ Then publish de configuration files for the auto generated menus
+
+First the configuration file (general configuration for a menu)
+``` bash
+$ php artisan vendor:publish --tag=config
+```
+
+Then the lang file (especific localizable configuration for a menu)
+``` bash
+$ php artisan vendor:publish --tag=lang
+```
+
+Optionally, you can publish the blade views that generate the menus if needed to be changed (not recommended)
+``` bash
+$ php artisan vendor:publish --tag=views
+```
 
 ## Usage
 
+ In a blade layout use
+``` html
+{!! AutoMenu::buildAutoMenu()!!}
+```
+ or the blade directive
+``` html
+@load_automenu()
+```
+
+This will use the default parameters, givin the menu an id of "menu" and using the configurations in app/config/sirgrimorum/automenu.php and resources/lang/vendor/automenu/en/automenu.php
+
+To use a diferent configuration, create a copy of the two configuration files and follow the instructions and give the call strings (the same for the config() and trans() commands) in the second and third parameters of the function call
+
 ``` php
-$skeleton = new League\Skeleton();
-echo $skeleton->echoPhrase('Hello, League!');
+AutoMenu::buildAutoMenu("menu_id","menus.new_config","menu_new_lang");
 ```
 
 ## Change log
 
 Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Testing
-
-``` bash
-$ composer test
-```
 
 ## Contributing
 
@@ -59,7 +66,6 @@ If you discover any security related issues, please email andres.espinosa@grimor
 ## Credits
 
 - [SirGrimorum][link-author]
-- [All Contributors][link-contributors]
 
 ## License
 

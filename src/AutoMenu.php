@@ -132,7 +132,7 @@ class AutoMenu {
      */
     private static function translateString($item, $prefix, $function, $close = "__") {
         $result = "";
-        if (str_contains($item, $prefix)) {
+        if (\Illuminate\Support\Str::contains($item, $prefix)) {
             if (($left = (stripos($item, $prefix))) !== false) {
                 while ($left !== false) {
                     if (($right = stripos($item, $close, $left + strlen($prefix))) === false) {
@@ -140,7 +140,7 @@ class AutoMenu {
                     }
                     $textPiece = substr($item, $left + strlen($prefix), $right - ($left + strlen($prefix)));
                     $piece = $textPiece;
-                    if (str_contains($textPiece, "{")) {
+                    if (\Illuminate\Support\Str::contains($textPiece, "{")) {
                         $auxLeft = (stripos($textPiece, "{"));
                         $auxRight = stripos($textPiece, "}", $left) + 1;
                         $auxJson = substr($textPiece, $auxLeft, $auxRight - $auxLeft);

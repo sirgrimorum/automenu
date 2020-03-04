@@ -10,7 +10,7 @@ $classText2 = "dropdown-item disabled";
 $classDivider2 = "dropdown-divider";
 $typeDivider2 = "a";
 $typeItem2 = "a";
-if(array_get($config,"menu.brand_center")){
+if(\Illuminate\Support\Arr::get($config,"menu.brand_center")){
     $classItem = "dropdown-item " . $class_extra_item;
     $classText = "dropdown-item disabled";
     $classDivider = "dropdown-divider";

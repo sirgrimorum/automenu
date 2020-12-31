@@ -2,10 +2,14 @@
 
 namespace Sirgrimorum\AutoMenu;
 
+use App\User;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
+
 class AutoMenu {
 
     function __construct() {
-        
+
     }
 
     /**
@@ -45,13 +49,14 @@ class AutoMenu {
             $config = config('sirgrimorum.automenu');
         }
         foreach ($config['replaces'] as $str => $campo) {
-            if (\Auth::check()) {
-                if (is_callable(\Auth::user()->$campo)) {
-                    $string = str_replace($str, \Auth::user()->$campo(), $string);
-                } elseif (method_exists(\Auth::user(),"get")) {
-                    $string = str_replace($str, \Auth::user()->get($campo), $string);
+            if (Auth::check()) {
+                $user = User::find(Auth::id());
+                if (is_callable($user->$campo)) {
+                    $string = str_replace($str, $user->$campo(), $string);
+                } elseif (method_exists(Auth::user(),"get")) {
+                    $string = str_replace($str, $user->get($campo), $string);
                 } else {
-                    $string = str_replace($str, \Auth::user()->$campo, $string);
+                    $string = str_replace($str, $user->$campo, $string);
                 }
             }
         }
@@ -62,10 +67,10 @@ class AutoMenu {
         //echo "<p>evaluando</p><pre>" . print_r($detalles) . "</pre>";
         if ($detalles === true) {
             //echo "<strong>aqui2</strong>";
-            $mostrar = \Auth::check();
+            $mostrar = Auth::check();
         } elseif ($detalles === false) {
             //echo "<strong>aqui3</strong>";
-            $mostrar = !\Auth::check();
+            $mostrar = !Auth::check();
         } elseif (is_callable($detalles)) {
             //echo "<strong>aqui</strong>";
             $mostrar = (bool) $detalles();
@@ -84,14 +89,14 @@ class AutoMenu {
 
     /**
      *  Evaluate functions inside the config array, such as trans(), route(), url() etc.
-     * 
+     *
      * @param array $array The config array
      * @return array The operated config array
      */
     private static function translateConfig($array) {
         $result = [];
         foreach ($array as $key => $item) {
-            $key = str_replace(config("sirgrimorum.automenu.locale_key"), \App::getLocale(), $key);
+            $key = str_replace(config("sirgrimorum.automenu.locale_key"), App::getLocale(), $key);
             $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.trans_prefix"), "trans");
             $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.asset_prefix"), "asset");
             $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.public_prefix"), "public_path");
@@ -99,7 +104,7 @@ class AutoMenu {
                 if (is_array($item)) {
                     $result[$key] = AutoMenu::translateConfig($item);
                 } elseif (is_string($item)) {
-                    $item = str_replace(config("sirgrimorum.automenu.locale_key"), \App::getLocale(), $item);
+                    $item = str_replace(config("sirgrimorum.automenu.locale_key"), App::getLocale(), $item);
                     $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.route_prefix"), "route");
                     $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.url_prefix"), "url");
                     $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.trans_prefix"), "trans");
@@ -117,13 +122,13 @@ class AutoMenu {
     }
 
     /**
-     * Use the crudgenerator prefixes to change strings in config array to evaluate 
+     * Use the crudgenerator prefixes to change strings in config array to evaluate
      * functions such as route(), trans(), url(), etc.
-     * 
-     * For parameters, use ',' to separate them inside the prefix and the close. 
-     * 
+     *
+     * For parameters, use ',' to separate them inside the prefix and the close.
+     *
      * For array, use json notation inside comas
-     * 
+     *
      * @param string $item The string to operate
      * @param string $prefix The prefix for the function
      * @param string $function The name of the function to evaluate
@@ -146,7 +151,7 @@ class AutoMenu {
                         $auxJson = substr($textPiece, $auxLeft, $auxRight - $auxLeft);
                         $textPiece = str_replace($auxJson, "*****", $textPiece);
                         $auxJson = str_replace(["'", ", }"], ['"', "}"], $auxJson);
-                        $auxArr = explode(",", str_replace([" ,", " ,"], [",", ","], $textPiece));
+                        $auxArr = explode(",", str_replace([" ,", ", "], [",", ","], $textPiece));
                         if ($auxIndex = array_search("*****", $auxArr)) {
                             $auxArr[$auxIndex] = json_decode($auxJson, true);
                         } else {

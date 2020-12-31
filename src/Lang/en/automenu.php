@@ -44,6 +44,11 @@
  *          'item' => 'Algo para poner'
  *      ],
  */
+
+use App\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\App;
+
 return [
     'brand_text' => "SirGrimorum",
     'brand_img' => "__asset__img/logonaranja.png",
@@ -67,7 +72,8 @@ return [
         ],
         "Menu Item3" => [
             "logedin" => function() {
-                return Auth::user()->can('update', Sirgrimorum\TransArticles\Models\Article::class);
+                $user = User::find(Auth::id());
+                return $user->can('update', Sirgrimorum\TransArticles\Models\Article::class);
             },
             "items" => "/"
         ],

@@ -5,6 +5,7 @@ namespace Sirgrimorum\AutoMenu;
 use App\User;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AutoMenu {
 
@@ -137,7 +138,7 @@ class AutoMenu {
      */
     private static function translateString($item, $prefix, $function, $close = "__") {
         $result = "";
-        if (\Illuminate\Support\Str::contains($item, $prefix)) {
+        if (Str::contains($item, $prefix)) {
             if (($left = (stripos($item, $prefix))) !== false) {
                 while ($left !== false) {
                     if (($right = stripos($item, $close, $left + strlen($prefix))) === false) {
@@ -145,7 +146,7 @@ class AutoMenu {
                     }
                     $textPiece = substr($item, $left + strlen($prefix), $right - ($left + strlen($prefix)));
                     $piece = $textPiece;
-                    if (\Illuminate\Support\Str::contains($textPiece, "{")) {
+                    if (Str::contains($textPiece, "{")) {
                         $auxLeft = (stripos($textPiece, "{"));
                         $auxRight = stripos($textPiece, "}", $left) + 1;
                         $auxJson = substr($textPiece, $auxLeft, $auxRight - $auxLeft);

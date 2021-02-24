@@ -8,6 +8,7 @@ return[
         "navbar_extra" => "navbar-dark bg-dark sticky-top",
         "navbar_brand" => "",
         "brand_img" => "",
+        "brand_img_height" => 30, // default 30
         "navbar_collapse" => "",
         "navbar_nav_izquierdo" => "mr-auto pl-2",
         "navbar_nav_derecho" => "ml-auto pr-2 text-right justify-content-end",
@@ -20,12 +21,12 @@ return[
         "button_izquierdo" => "", //For the centered configuration and the toogle menu button in the normal configuration
         "button_derecho" => "", //For the centered configuration
     ],
-    'icons' => [ 
+    'icons' => [
         'left' => "fa fa-bars", //For the centered configuration and the toogle menu button in the normal configuration
         'right' => "fa fa-user", //For the centered configuration
     ],
     "replaces"=>[ // Strings to be replaced with current user's fields values
-        "{name}"=>"name", 
+        "{name}"=>"name",
         "{email}"=>"email",
         "{image}"=>"image",
     ],

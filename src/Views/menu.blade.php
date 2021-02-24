@@ -6,7 +6,7 @@
     @if(\Illuminate\Support\Arr::get($config,"menu.brand_img")!="" || \Illuminate\Support\Arr::get($config,"menu.brand_text")!="")
     <a class="navbar-brand {{\Illuminate\Support\Arr::get($config,"classes.navbar_brand")}}" href="{{\Illuminate\Support\Arr::get($config,"menu.brand_url")}}">
         @if(\Illuminate\Support\Arr::get($config,"menu.brand_img")!="")
-        <img src="{{\Illuminate\Support\Arr::get($config,"menu.brand_img")}}"  height="30" class="d-inline-block align-top {{\Illuminate\Support\Arr::get($config,"classes.brand_img")}}" alt="">
+        <img src="{{ \Illuminate\Support\Arr::get($config,"menu.brand_img") }}"  height="{{ \Illuminate\Support\Arr::get($config,"classes.brand_img_height", 30) }}" class="d-inline-block align-top {{\Illuminate\Support\Arr::get($config,"classes.brand_img")}}" alt="">
         @endif
         {!!\Illuminate\Support\Arr::get($config,"menu.brand_text")!!}
     </a>

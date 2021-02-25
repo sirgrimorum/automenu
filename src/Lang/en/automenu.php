@@ -30,7 +30,7 @@
  *                      "logedin" => true,
  *                      "item" => "http://absolute/url",
  *                  ],
- *                  "-"=>"-",
+ *                  "_"=>"_",
  *                  "[SubMenu Item2]"=>[
  *                      "logedin" => function(){
  *                          return Auth::check();

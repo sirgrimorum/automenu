@@ -22,7 +22,7 @@ class AutoMenuServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/Views' => resource_path('views/vendor/sirgrimorum/automenu'),
                 ], 'views');
-        $this->loadTranslationsFrom(__DIR__ . 'Lang', 'automenu');
+        $this->loadTranslationsFrom(__DIR__ . '/Lang', 'automenu');
         $this->publishes([
             __DIR__ . '/Lang' => resource_path('lang/vendor/automenu'),
                 ], 'lang');
@@ -46,8 +46,7 @@ class AutoMenuServiceProvider extends ServiceProvider
                 $config = "";
                 $automenu = "";
             }
-            $automenu = new AutoMenu($this->app);
-            return $automenu->buildAutoMenu($id, $config, $automenu);
+            return AutoMenu::buildAutoMenu($id, $config, $automenu);
         });
     }
 

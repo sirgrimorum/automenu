@@ -143,6 +143,23 @@ foreach ($menuItems as $nombre => $datos) {
                     <?php
                 }
             }
+        } elseif (isset($datos['logedin']) && isset($datos['item'])) {
+            if (Sirgrimorum\AutoMenu\AutoMenu::hasAccess($datos['logedin'])) {
+                $classExtra = " " . $class_extra_item . " " . $class_extra_item_primero;
+                $class_extra_item_primero = "";
+                if ($datos['item'] == app('request')->fullUrl()) {
+                    $active = " active";
+                }else{
+                    $active = "";
+                }
+                ?>
+                <{{$typeItem}} class="{{$classItem . $classExtra . $active}}">
+                    <a class="nav-link" href="{{ $datos['item'] }}">
+                        {!! $nombre!!}
+                    </a>
+                </{{$typeItem}}>
+                <?php
+            }
         }
     } elseif ($nombre == '_') {
         ?>

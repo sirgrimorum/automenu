@@ -22,25 +22,49 @@ class AutoMenu {
      * @return String Html con el menu
      */
     public static function buildAutoMenu($id = "menu", $config = "", $automenu = "") {
+        $defaultConfig = config('sirgrimorum.automenu');
         if (!is_array($config)) {
             if ($config == "") {
-                $config = 'sirgrimorum.automenu';
+                $config = $defaultConfig;
+            } else {
+                $config = config($config);
             }
-            $config = config($config);
+        }
+        if (is_array($config)) {
+            $config = array_merge($defaultConfig, $config);
+        } else {
+            $config = $defaultConfig;
         }
         $config['id'] = $id;
-        //$config = AutoMenu::translateConfig($config);
+        
         if (!is_array($automenu)) {
             if ($automenu == "") {
                 $automenu = 'automenu::automenu';
             }
             $automenu = trans($automenu);
         }
-        $automenu = AutoMenu::translateConfig($automenu);
-        $config['menu'] = $automenu;
-        $configObj = json_decode(json_encode($config), false);
-        //echo "<p>config</p><pre>" . print_r($config, true) . "</pre>";
-        //return "hola";
+        if (!is_array($automenu)) {
+            $automenu = ['top' => [], 'izquierdo' => [], 'derecha' => []];
+        }
+        
+        $automenuTranslated = AutoMenu::translateConfig($automenu);
+        
+        // Final fallback to ensure the view never crashes
+        if (!is_array($automenuTranslated)) {
+            $automenuTranslated = ['top' => [], 'izquierdo' => [], 'derecha' => []];
+        }
+        if (!isset($automenuTranslated['izquierdo'])) {
+            $automenuTranslated['izquierdo'] = [];
+        }
+        if (!isset($automenuTranslated['derecha'])) {
+            $automenuTranslated['derecha'] = [];
+        }
+        if (!isset($automenuTranslated['top'])) {
+            $automenuTranslated['top'] = [];
+        }
+        
+        $config['menu'] = $automenuTranslated;
+        
         return view('automenu::menu', [
             "config" => $config,
         ]);
@@ -50,15 +74,19 @@ class AutoMenu {
         if (!is_array($config)) {
             $config = config('sirgrimorum.automenu');
         }
-        foreach ($config['replaces'] as $str => $campo) {
-            if (Auth::check()) {
-                $user = User::find(Auth::id());
-                if (is_callable($user->$campo)) {
-                    $string = str_replace($str, $user->$campo(), $string);
-                } elseif (method_exists(Auth::user(),"get")) {
-                    $string = str_replace($str, $user->get($campo), $string);
-                } else {
-                    $string = str_replace($str, $user->$campo, $string);
+        if (isset($config['replaces']) && is_array($config['replaces'])) {
+            foreach ($config['replaces'] as $str => $campo) {
+                if (Auth::check()) {
+                    $user = User::find(Auth::id());
+                    if ($user) {
+                        if (is_callable($user->$campo)) {
+                            $string = str_replace($str, $user->$campo(), $string);
+                        } elseif (method_exists($user,"get")) {
+                            $string = str_replace($str, $user->get($campo), $string);
+                        } else {
+                            $string = str_replace($str, $user->$campo, $string);
+                        }
+                    }
                 }
             }
         }
@@ -66,121 +94,112 @@ class AutoMenu {
     }
 
     public static function hasAccess($detalles) {
-        //echo "<p>evaluando</p><pre>" . print_r($detalles) . "</pre>";
         if ($detalles === true) {
-            //echo "<strong>aqui2</strong>";
-            $mostrar = Auth::check();
+            return Auth::check();
         } elseif ($detalles === false) {
-            //echo "<strong>aqui3</strong>";
-            $mostrar = !Auth::check();
+            return !Auth::check();
         } elseif (is_callable($detalles)) {
-            //echo "<strong>aqui</strong>";
-            $mostrar = (bool) $detalles();
-        } elseif (strtolower($detalles) == "na") {
-            $mostrar = true;
+            return (bool) $detalles();
+        } elseif (is_string($detalles) && strtolower($detalles) == "na") {
+            return true;
         } else {
-            $mostrar = false;
+            return false;
         }
-        if ($mostrar) {
-            //echo "Res=si";
-        } else {
-            //echo "Res=no";
-        }
-        return $mostrar;
     }
 
-    /**
-     *  Evaluate functions inside the config array, such as trans(), route(), url() etc.
-     *
-     * @param array $array The config array
-     * @return array The operated config array
-     */
     private static function translateConfig($array) {
+        if (!is_array($array)) {
+            return $array;
+        }
         $result = [];
+        $locale_key = (string) config("sirgrimorum.automenu.locale_key");
+        $trans_prefix = (string) config("sirgrimorum.automenu.trans_prefix");
+        $asset_prefix = (string) config("sirgrimorum.automenu.asset_prefix");
+        $public_prefix = (string) config("sirgrimorum.automenu.public_prefix");
+        $route_prefix = (string) config("sirgrimorum.automenu.route_prefix");
+        $url_prefix = (string) config("sirgrimorum.automenu.url_prefix");
+
         foreach ($array as $key => $item) {
-            $key = str_replace(config("sirgrimorum.automenu.locale_key"), App::getLocale(), $key);
-            $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.trans_prefix"), "trans");
-            $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.asset_prefix"), "asset");
-            $key = AutoMenu::translateString($key, config("sirgrimorum.automenu.public_prefix"), "public_path");
-            if (!($item instanceof Closure)) {
-                if (is_array($item)) {
-                    $result[$key] = AutoMenu::translateConfig($item);
-                } elseif (is_string($item)) {
-                    $item = str_replace(config("sirgrimorum.automenu.locale_key"), App::getLocale(), $item);
-                    $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.route_prefix"), "route");
-                    $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.url_prefix"), "url");
-                    $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.trans_prefix"), "trans");
-                    $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.asset_prefix"), "asset");
-                    $item = AutoMenu::translateString($item, config("sirgrimorum.automenu.public_prefix"), "public_path");
-                    $result[$key] = $item;
+            $newKey = (string) $key;
+            if ($locale_key != "") $newKey = str_replace($locale_key, (string) App::getLocale(), $newKey);
+            if ($trans_prefix != "") $newKey = AutoMenu::translateString($newKey, $trans_prefix, "trans");
+            if ($asset_prefix != "") $newKey = AutoMenu::translateString($newKey, $asset_prefix, "asset");
+            if ($public_prefix != "") $newKey = AutoMenu::translateString($newKey, $public_prefix, "public_path");
+            
+            if ($item instanceof Closure) {
+                $result[$newKey] = $item;
+            } elseif (is_array($item)) {
+                $result[$newKey] = AutoMenu::translateConfig($item);
+            } elseif (is_string($item)) {
+                $newItem = $item;
+                if ($locale_key != "") $newItem = str_replace($locale_key, (string) App::getLocale(), $newItem);
+                if ($route_prefix != "") $newItem = AutoMenu::translateString($newItem, $route_prefix, "route");
+                if ($url_prefix != "") $newItem = AutoMenu::translateString($newItem, $url_prefix, "url");
+                if ($trans_prefix != "") $newItem = AutoMenu::translateString($newItem, $trans_prefix, "trans");
+                if ($asset_prefix != "") $newItem = AutoMenu::translateString($newItem, $asset_prefix, "asset");
+                if ($public_prefix != "") $newItem = AutoMenu::translateString($newItem, $public_prefix, "public_path");
+                $result[$newKey] = $newItem;
+            } else {
+                $result[$newKey] = $item;
+            }
+        }
+        return $result;
+    }
+
+    private static function translateString($item, $prefix, $function, $close = "__") {
+        if ($prefix == "" || !is_string($item) || !Str::contains($item, $prefix)) {
+            return $item;
+        }
+        
+        $left = stripos($item, $prefix);
+        while ($left !== false) {
+            $right = stripos($item, $close, $left + strlen($prefix));
+            if ($right === false) {
+                $right = strlen($item);
+            }
+            
+            $textPiece = substr($item, $left + strlen($prefix), $right - ($left + strlen($prefix)));
+            $piece = $textPiece;
+            
+            if (Str::contains($textPiece, "{")) {
+                $auxLeft = stripos($textPiece, "{");
+                $auxRight = stripos($textPiece, "}", $auxLeft) + 1;
+                $auxJson = substr($textPiece, $auxLeft, $auxRight - $auxLeft);
+                $cleanTextPiece = str_replace($auxJson, "*****", $textPiece);
+                $auxJson = str_replace(["'", ", }"], ['"', "}"], $auxJson);
+                $auxArr = explode(",", str_replace([" ,", ", "], [",", ","], $cleanTextPiece));
+                if (($auxIndex = array_search("*****", $auxArr)) !== false) {
+                    $auxArr[$auxIndex] = json_decode($auxJson, true);
                 } else {
-                    $result[$key] = $item;
+                    $auxArr[] = json_decode($auxJson, true);
+                }
+                
+                if ($function == "trans") {
+                    $piece = trans((string)($auxArr[0] ?? ""));
+                } elseif ($function == "url") {
+                    $piece = url((string)($auxArr[0] ?? ""));
+                } else {
+                    $piece = call_user_func_array($function, $auxArr);
                 }
             } else {
-                $result[$key] = $item;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Use the crudgenerator prefixes to change strings in config array to evaluate
-     * functions such as route(), trans(), url(), etc.
-     *
-     * For parameters, use ',' to separate them inside the prefix and the close.
-     *
-     * For array, use json notation inside comas
-     *
-     * @param string $item The string to operate
-     * @param string $prefix The prefix for the function
-     * @param string $function The name of the function to evaluate
-     * @param string $close Optional, the closing string for the prefix, default is '__'
-     * @return string The string with the results of the evaluations
-     */
-    private static function translateString($item, $prefix, $function, $close = "__") {
-        $result = "";
-        if (Str::contains($item, $prefix)) {
-            if (($left = (stripos($item, $prefix))) !== false) {
-                while ($left !== false) {
-                    if (($right = stripos($item, $close, $left + strlen($prefix))) === false) {
-                        $right = strlen($item);
-                    }
-                    $textPiece = substr($item, $left + strlen($prefix), $right - ($left + strlen($prefix)));
-                    $piece = $textPiece;
-                    if (Str::contains($textPiece, "{")) {
-                        $auxLeft = (stripos($textPiece, "{"));
-                        $auxRight = stripos($textPiece, "}", $left) + 1;
-                        $auxJson = substr($textPiece, $auxLeft, $auxRight - $auxLeft);
-                        $textPiece = str_replace($auxJson, "*****", $textPiece);
-                        $auxJson = str_replace(["'", ", }"], ['"', "}"], $auxJson);
-                        $auxArr = explode(",", str_replace([" ,", ", "], [",", ","], $textPiece));
-                        if ($auxIndex = array_search("*****", $auxArr)) {
-                            $auxArr[$auxIndex] = json_decode($auxJson, true);
-                        } else {
-                            $auxArr[] = json_decode($auxJson);
-                        }
-                        $piece = call_user_func_array($function, $auxArr);
-                    } else {
-                        $piece = call_user_func($function, $textPiece);
-                    }
-                    if (is_string($piece)) {
-                        if ($right <= strlen($item)) {
-                            $item = substr($item, 0, $left) . $piece . substr($item, $right + 2);
-                        } else {
-                            $item = substr($item, 0, $left) . $piece;
-                        }
-                        $left = (stripos($item, $prefix));
-                    } else {
-                        $item = $piece;
-                        $left = false;
-                    }
+                $auxArr = explode(",", str_replace([" ,", ", "], [",", ","], $textPiece));
+                if ($function == "trans") {
+                    $piece = trans((string)($auxArr[0] ?? ""));
+                } elseif ($function == "url") {
+                    $piece = url((string)($auxArr[0] ?? ""));
+                } else {
+                    $piece = call_user_func_array($function, $auxArr);
                 }
             }
-            $result = $item;
-        } else {
-            $result = $item;
+            
+            if (is_string($piece)) {
+                $item = substr($item, 0, $left) . $piece . substr($item, $right + strlen($close));
+                $left = stripos($item, $prefix);
+            } else {
+                $item = $piece;
+                $left = false;
+            }
         }
-        return $result;
+        return $item;
     }
-
 }

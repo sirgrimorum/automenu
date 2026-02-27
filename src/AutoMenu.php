@@ -174,13 +174,7 @@ class AutoMenu {
                     $auxArr[] = json_decode($auxJson, true);
                 }
                 
-                if ($function == "trans") {
-                    $piece = trans((string)($auxArr[0] ?? ""));
-                } elseif ($function == "url") {
-                    $piece = url((string)($auxArr[0] ?? ""));
-                } else {
-                    $piece = call_user_func_array($function, $auxArr);
-                }
+                $piece = call_user_func_array($function, $auxArr);
             } else {
                 $auxArr = explode(",", str_replace([" ,", ", "], [",", ","], $textPiece));
                 if ($function == "trans") {

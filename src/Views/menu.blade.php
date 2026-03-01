@@ -1,7 +1,7 @@
 @if($config["menu_stack"]!="")
 @push($config["menu_stack"])
 @endif
-<nav class="navbar navbar-expand-lg {{\Illuminate\Support\Arr::get($config,"classes.navbar_extra")}}" role="navigation">
+<nav id="{{ $config['id'] }}" class="navbar navbar-expand-lg {{\Illuminate\Support\Arr::get($config,"classes.navbar_extra")}}" role="navigation">
     @if(!\Illuminate\Support\Arr::get($config,"menu.brand_center"))
     @if(\Illuminate\Support\Arr::get($config,"menu.brand_img")!="" || \Illuminate\Support\Arr::get($config,"menu.brand_text")!="")
     <a class="navbar-brand {{\Illuminate\Support\Arr::get($config,"classes.navbar_brand")}}" href="{{\Illuminate\Support\Arr::get($config,"menu.brand_url")}}">

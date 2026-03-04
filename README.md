@@ -1,87 +1,218 @@
-# automenu
+# AutoMenu
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE.md)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
+![Latest Version on Packagist](https://img.shields.io/packagist/v/sirgrimorum/automenu.svg?style=flat-square)
+![PHP Version](https://img.shields.io/packagist/php-v/sirgrimorum/automenu.svg?style=flat-square)
+![Total Downloads](https://img.shields.io/packagist/dt/sirgrimorum/automenu.svg?style=flat-square)
+![License](https://img.shields.io/packagist/l/sirgrimorum/automenu.svg?style=flat-square)
 
-Easy Menu builder for Laravel using Bootstrap framework.
-## Install
+A dynamic, hierarchical Bootstrap navigation builder for Laravel. Generate full multi-level navbars from PHP configuration arrays — with user data interpolation, locale-aware links, access control, and zero HTML boilerplate.
 
-Via Composer
+## Features
 
-``` bash
-$ composer require sirgrimorum/automenu
+- **No HTML required** — generate a complete Bootstrap navbar from a configuration array
+- **Multi-level dropdowns** — unlimited nesting depth
+- **User data interpolation** — embed `{name}`, `{email}`, or any user attribute/method into labels and URLs
+- **Dynamic value prefixes** — `__route__`, `__url__`, `__trans__`, `__asset__`, `__getLocale__` are evaluated at render time
+- **Per-item access control** — closures, `Auth::check()`, or the `"na"` (always-visible) constant
+- **Blade stack injection** — push extra items into the menu at render time via named stacks
+- **Fully configurable styling** — every Bootstrap class (navbar, brand, nav, items, dropdowns) is overridable in config
+
+## Requirements
+
+- PHP >= 8.2
+- Laravel >= 9.0
+
+## Installation
+
+```bash
+composer require sirgrimorum/automenu
 ```
- Then publish de configuration files for the auto generated menus:
 
-First the configuration file (general configuration for a menu)
-``` bash
-$ php artisan vendor:publish --tag=config
+### Publish configuration
+
+```bash
+php artisan vendor:publish --provider="Sirgrimorum\AutoMenu\AutoMenuServiceProvider" --tag=config
 ```
 
-Then the lang file (especific localizable configuration for a menu)
-``` bash
-$ php artisan vendor:publish --tag=lang
+Publishes `config/sirgrimorum/automenu.php`.
+
+### Publish views (optional)
+
+```bash
+php artisan vendor:publish --provider="Sirgrimorum\AutoMenu\AutoMenuServiceProvider" --tag=views
 ```
 
-Optionally, you can publish the blade views that generate the menus if needed to be changed (not recommended)
-``` bash
-$ php artisan vendor:publish --tag=views
+Publishes to `resources/views/vendor/sirgrimorum/automenu/`.
+
+## Configuration
+
+`config/sirgrimorum/automenu.php`
+
+### Blade stacks
+
+Items pushed onto these stacks are injected into the rendered navbar:
+
+```php
+'menu_stack'              => 'menuobj',    // main injection stack
+'menuitem_izquierda_stack' => 'menuleft',  // left nav items
+'menuitem_derecha_stack'   => 'menuright', // right nav items
+```
+
+### Bootstrap classes
+
+```php
+'classes' => [
+    'navbar'        => 'navbar navbar-expand-md navbar-dark bg-dark',
+    'brand'         => 'navbar-brand',
+    'nav_izquierda' => 'navbar-nav mr-auto',
+    'nav_derecha'   => 'navbar-nav ml-auto',
+    'item'          => 'nav-item',
+    'link'          => 'nav-link',
+    'dropdown'      => 'nav-item dropdown',
+    'dropdown_menu' => 'dropdown-menu',
+    'dropdown_item' => 'dropdown-item',
+    'button'        => 'btn btn-outline-light',
+],
+```
+
+### User field replacements
+
+Placeholders in labels and URLs are replaced with values from `Auth::user()`:
+
+```php
+'replaces' => [
+    '{name}'  => 'name',       // property access
+    '{email}' => 'email',
+    '{image}' => 'getAvatar',  // method call if callable
+],
+```
+
+### Dynamic value prefixes
+
+| Prefix | Resolves to |
+|--------|-------------|
+| `__route__routeName` | `route('routeName')` |
+| `__url__/path` | `url('/path')` |
+| `__trans__key` | `trans('key')` |
+| `__asset__path/file.js` | `asset('path/file.js')` |
+| `__getLocale__` | `App::getLocale()` |
+
+## Defining a Menu
+
+The menu structure is a PHP array with three sections: `top`, `izquierdo` (left), and `derecha` (right). Store it in a config file or a translation file.
+
+```php
+// config/sirgrimorum/menus/main.php
+return [
+    'top'       => [],
+    'izquierdo' => [
+        [
+            'label'  => '__trans__nav.home',
+            'url'    => '__route__home',
+            'access' => 'na',                          // always visible
+        ],
+        [
+            'label'    => '__trans__nav.admin',
+            'url'      => '#',
+            'access'   => fn() => Auth::user()?->isAdmin(),
+            'children' => [
+                [
+                    'label' => '__trans__nav.users',
+                    'url'   => '__route__admin.users.index',
+                ],
+            ],
+        ],
+    ],
+    'derecha' => [
+        [
+            'label'  => 'Hello, {name}',
+            'url'    => '__route__profile',
+            'access' => fn() => Auth::check(),
+        ],
+        [
+            'label'  => '__trans__nav.login',
+            'url'    => '__route__login',
+            'access' => fn() => !Auth::check(),
+        ],
+    ],
+];
 ```
 
 ## Usage
 
- In a blade layout use
-``` html
-{!! AutoMenu::buildAutoMenu()!!}
-```
- or the blade directive
-``` html
+### Blade directive
+
+```blade
+{{-- render with explicit id, config path, and menu structure --}}
+@load_automenu('main-nav', 'sirgrimorum/menus/main')
+
+{{-- all three parameters are optional; falls back to config defaults --}}
 @load_automenu()
 ```
 
-This will use the default parameters, givin the menu an id of "menu" and using the configurations in app/config/sirgrimorum/automenu.php and resources/lang/vendor/automenu/en/automenu.php
+### Facade
 
-To use a diferent configuration, create a copy of the two configuration files and follow the instructions and give the call strings (the same for the config() and trans() commands) in the second and third parameters of the function call
-
-``` php
-AutoMenu::buildAutoMenu("menu_id","menus.new_config","menu_new_lang");
+```blade
+{!! AutoMenu::buildAutoMenu('main-nav', 'sirgrimorum/menus/main') !!}
 ```
 
-## Change log
+### Injecting extra items at runtime
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+In any view rendered before the menu layout:
 
-## Contributing
+```blade
+@push('menuobj')
+    <li class="nav-item">
+        <a class="nav-link" href="{{ route('cart') }}">Cart ({{ $cartCount }})</a>
+    </li>
+@endpush
+```
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
+### Integration with sirgrimorum/pages
 
-## Security
+```php
+use Sirgrimorum\Pages\Pages;
 
-If you discover any security related issues, please email andres.espinosa@grimorum.com instead of using the issue tracker.
+$menuWithPages = Pages::getAutoMenuConfig(2, 'izquierdo', config('sirgrimorum/menus/main'));
+echo AutoMenu::buildAutoMenu('main-nav', '', $menuWithPages);
+```
 
-## Credits
+## API Reference
 
-- [SirGrimorum][link-author]
+### `AutoMenu::buildAutoMenu()`
+
+```php
+AutoMenu::buildAutoMenu(
+    string $id       = 'menu',  // HTML id for the <nav> element
+    mixed  $config   = '',      // Config array or dot-path string to a config file
+    mixed  $automenu = ''       // Menu structure array or translation key
+): string
+```
+
+Returns the full Bootstrap navbar HTML string.
+
+### `AutoMenu::replaceUser()`
+
+```php
+AutoMenu::replaceUser(string $string, mixed $config = ''): string
+```
+
+Replaces `{field}` placeholders in `$string` with values from the authenticated user.
+
+### `AutoMenu::hasAccess()`
+
+```php
+AutoMenu::hasAccess(mixed $rule): bool
+```
+
+Evaluates an access rule: `'na'` → always `true`; `callable` → invokes it; otherwise returns `Auth::check()`.
+
+### Blade directive
+
+```blade
+@load_automenu(string $id = 'menu', mixed $config = '', mixed $automenu = '')
+```
 
 ## License
 
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-[ico-version]: https://img.shields.io/packagist/v/sirgrimorum/automenu.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/sirgrimorum/automenu/master.svg?style=flat-square
-[ico-scrutinizer]: https://img.shields.io/scrutinizer/coverage/g/sirgrimorum/automenu.svg?style=flat-square
-[ico-code-quality]: https://img.shields.io/scrutinizer/g/sirgrimorum/automenu.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/sirgrimorum/automenu.svg?style=flat-square
-
-[link-packagist]: https://packagist.org/packages/sirgrimorum/automenu
-[link-travis]: https://travis-ci.org/sirgrimorum/automenu
-[link-scrutinizer]: https://scrutinizer-ci.com/g/sirgrimorum/automenu/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/sirgrimorum/automenu
-[link-downloads]: https://packagist.org/packages/sirgrimorum/automenu
-[link-author]: https://github.com/sirgrimorum
-[link-contributors]: ../../contributors
+The MIT License (MIT). See [LICENSE.md](LICENSE.md).
